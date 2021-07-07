@@ -3,6 +3,10 @@ module.exports = (config) => {
     frameworks: ['jasmine', 'karma-typescript'],
     basePath: '..',
     files: [
+      // The polyfills are required for old supported browsers.
+      // They should be removed when the old browser support is dropped.
+      'node_modules/promise-polyfill/dist/polyfill.js',
+
       'src/**/*.ts',
       'tests/**/*.ts',
       'dist/fp.min.js',

@@ -2,6 +2,12 @@
 
 This guide shows how to migrate your code from FingerprintJS version 2 to version 3.
 
+## Browser support
+
+The support of Internet Explorer 10 and older has been dropped.
+Some old browsers like Internet Explorer 11 and Android Browser 4.1 require a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) polyfill;
+see the [browser support guide](browser_support.md#old-browsers-requirements) to learn more about usage with these browsers.
+
 ## Installation
 
 The migration process depends on the way you install the library.
@@ -42,12 +48,14 @@ The agent has a `get` method that you will use instead of calling `Fingerprint2.
 
 ```diff
 - requestIdleCallback(() => {
-+ FingerprintJS.load().then(fp => {
--   Fingerprint2.get().then(result => {
-+   fp.get().then(result => {
+-   Fingerprint2.get(result => {
++ const fpPromise = FingerprintJS.load()
++ fpPromise
++   .then(fp => fp.get()){
++   .then(result => {
       // Handle the result
     })
-  })
+- })
 ```
 
 ## Handling the result
@@ -88,22 +96,5 @@ console.log(result)
 ## Customization
 
 Version 3 has no options for customization, it provides a good built-in setup.
-Nevertheless, you can exclude components and add custom components manually.
-Use a provided hash function to achieve this:
-
-```js
-const result = await fp.get()
-
-// Exclude a couple components
-const { languages, audio, ...components } = result
-
-// Add a few custom components
-const extendedComponents = {
-  ...components,
-  foo: { value: await getFooComponent() },
-  bar: { value: await getBarComponent() },
-}
-
-// Make a visitor identifier from you custom list of components
-const visitorId = FingerprintJS.hashComponents(extendedComponents)
-```
+Nevertheless, you can exclude built-in entropy components and add custom entropy components manually.
+See the [extending guide](extending.md) to learn more.

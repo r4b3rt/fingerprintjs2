@@ -1,8 +1,5 @@
 import { toInt } from '../utils/data'
 
-const n = navigator
-const w = window
-
 export interface TouchSupport {
   maxTouchPoints: number
   /** The success or failure of creating a TouchEvent */
@@ -19,6 +16,8 @@ export interface TouchSupport {
  * @see https://github.com/Modernizr/Modernizr/issues/548
  */
 export default function getTouchSupport(): TouchSupport {
+  const n = navigator
+
   let maxTouchPoints = 0
   let touchEvent: boolean
   if (n.maxTouchPoints !== undefined) {
@@ -29,10 +28,10 @@ export default function getTouchSupport(): TouchSupport {
   try {
     document.createEvent('TouchEvent')
     touchEvent = true
-  } catch (_) {
+  } catch {
     touchEvent = false
   }
-  const touchStart = 'ontouchstart' in w
+  const touchStart = 'ontouchstart' in window
   return {
     maxTouchPoints,
     touchEvent,

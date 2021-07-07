@@ -10,21 +10,24 @@ export interface PluginData {
 }
 
 export default function getPlugins(): PluginData[] | undefined {
-  if (!navigator.plugins) {
+  const rawPlugins = navigator.plugins
+
+  if (!rawPlugins) {
     return undefined
   }
 
   const plugins: PluginData[] = []
 
   // Safari 10 doesn't support iterating navigator.plugins with for...of
-  for (let i = 0; i < navigator.plugins.length; ++i) {
-    const plugin = navigator.plugins[i]
+  for (let i = 0; i < rawPlugins.length; ++i) {
+    const plugin = rawPlugins[i]
     if (!plugin) {
       continue
     }
 
     const mimeTypes: PluginMimeTypeData[] = []
-    for (const mimeType of plugin) {
+    for (let j = 0; j < plugin.length; ++j) {
+      const mimeType = plugin[j]
       mimeTypes.push({
         type: mimeType.type,
         suffixes: mimeType.suffixes,

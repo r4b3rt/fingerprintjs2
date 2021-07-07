@@ -1,20 +1,10 @@
-import { isEdgeHTML } from '../../tests/utils'
+import { isEdgeHTML, isTrident } from '../../tests/utils'
 import getIndexedDB from './indexed_db'
 
 describe('Sources', () => {
   describe('indexedDB', () => {
-    it('returns boolean everywhere except Edge', () => {
-      if (isEdgeHTML()) {
-       pending('The case isn\'t for Edge')
-      }
-      expect(typeof getIndexedDB()).toBe('boolean')
-    })
-
-    it('returns undefined in Edge', () => {
-      if (!isEdgeHTML()) {
-       pending('The case is for Edge only')
-      }
-      expect(getIndexedDB()).toBeUndefined()
+    it('returns boolean or undefined depending on the browser', () => {
+      expect(typeof getIndexedDB()).toBe(isTrident() || isEdgeHTML() ? 'undefined' : 'boolean')
     })
   })
 })

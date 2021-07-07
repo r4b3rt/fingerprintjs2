@@ -1,11 +1,13 @@
-import { toInt } from '../utils/data'
+import { replaceNaN, toInt } from '../utils/data'
 
-const w = window
+export default function getScreenResolution(): [number | null, number | null] {
+  const s = screen
 
-export default function getScreenResolution(): [number, number] {
   // Some browsers return screen resolution as strings, e.g. "1200", instead of a number, e.g. 1200.
   // I suspect it's done by certain plugins that randomize browser properties to prevent fingerprinting.
-  const dimensions = [toInt(w.screen.width), toInt(w.screen.height)] as [number, number]
+  // Some browsers even return  screen resolution as not numbers.
+  const parseDimension = (value: unknown) => replaceNaN(toInt(value), null)
+  const dimensions = [parseDimension(s.width), parseDimension(s.height)] as [number | null, number | null]
   dimensions.sort().reverse()
   return dimensions
 }
